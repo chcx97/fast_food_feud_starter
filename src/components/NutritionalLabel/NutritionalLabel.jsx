@@ -19,10 +19,11 @@ export function NutritionalLabel(props) {
 }
 
 export function NutritionalLabelFact(props) {
+  console.log(props.item[props.nutritionalLabel.attribute]);
   return (
     <li className="nutrition-fact">
       <span className="fact-label">{props.nutritionalLabel.label}</span>{" "}
-      <span className="fact-value">item</span>
+      <span className="fact-value">{props.item[props.nutritionalLabel.attribute]}</span>
     </li>
   )
 }
