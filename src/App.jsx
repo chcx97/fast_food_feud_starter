@@ -3,6 +3,8 @@ import * as React from "react"
 import Header from "./components/Header/Header"
 import Instructions from "./components/Instructions/Instructions"
 import Chip from "./components/Chip/Chip"
+import { useState } from "react"
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel"
 import { createDataSet } from "./data/dataset"
 import "./App.css"
 
@@ -24,6 +26,25 @@ export const appInfo = {
 const { data, categories, restaurants } = createDataSet()
 
 export function App() {
+  //states
+  const [selectCategory, setSelectCategory] = useState("");
+  const [selectRestaurant, setSelectRestaurant] = useState("");
+  const [selectMenu, setSelectMenu] = useState([]);
+  //event handler
+  function handleClickedCategory(category){
+    setSelectCategory(category);
+  }  
+  function handleClickedRestaurant(restaurant){
+    setSelectRestaurant(restaurant);
+  }  
+
+  function handleClickedMenu(items){
+    console.log(1111,items);
+    setSelectMenu(items);
+  }
+  var currentMenuItems = data.filter(category => category.food_category == selectCategory && category.restaurant == selectRestaurant);
+
+
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
@@ -31,7 +52,14 @@ export function App() {
         <div className="categories options">
           <h2 className="title">Categories</h2>
           {categories.map((category) => (
-            <Chip label={category} key={categories}/>
+            <Chip
+            
+            onClick = {() => handleClickedCategory(category)}
+            isActive = {selectCategory == category}
+            label={category} 
+            key={category} 
+            //isActive={category=="Burgers"}
+            />
           ))}
         </div>
       </div>
@@ -44,7 +72,12 @@ export function App() {
         <div className="RestaurantsRow">
           <h2 className="title">Restaurants</h2>
           <div className="restaurants options">{restaurants.map((restaurant)=>(
-            <Chip label={restaurant} key={restaurant}/>
+            <Chip onClick = {() => handleClickedRestaurant(restaurant)}
+            isActive = {selectRestaurant == restaurant}
+            label={restaurant} 
+            key={restaurant} 
+            //isActive={restaurant=="In-N-Out Burger"}
+            />
           ))}</div>
         </div>
         {/* INSTRUCTIONS GO HERE */}
@@ -53,11 +86,20 @@ export function App() {
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
-            {/* YOUR CODE HERE */}
+            {currentMenuItems.map((food, index) =>(
+              <Chip
+              onClick={()=> handleClickedMenu(food)}
+              isActive = {selectMenu==food}
+              label = {food.item_name}
+              key ={index}
+              />
+              ))}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          <div className="NutritionFacts nutrition-facts">{
+            <NutritionalLabel item ={selectMenu}/>
+          }</div>
         </div>
 
         <div className="data-sources">
